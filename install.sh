@@ -117,11 +117,55 @@ cp -a "$ROOT/config/environment.d/90-gnome-qt.conf" "$CONFIG/environment.d/"
 # Configure the WebKit2 greeter without replacing LightDM's main configuration.
 sudo install -d -m 755 /etc/lightdm/lightdm.conf.d
 printf '[Seat:*]\ngreeter-session=lightdm-webkit2-greeter\n' | sudo tee /etc/lightdm/lightdm.conf.d/50-niri-noctalia.conf >/dev/null
-sudo install -m 644 /dev/null /etc/lightdm/lightdm-webkit2-greeter.conf
-sudo tee /etc/lightdm/lightdm-webkit2-greeter.conf >/dev/null <<'EOF'
-[greeter]
-webkit_theme = glorious
-EOF
+greeter_config=/etc/lightdm/lightdm-webkit2-greeter.conf
+greeter_tmp_dir="$(mktemp -d)"
+if sudo test -f "$greeter_config"; then
+  sudo cat "$greeter_config" > "$greeter_tmp_dir/original"
+else
+  : > "$greeter_tmp_dir/original"
+fi
+awk '
+  function add_missing_greeter_settings() {
+    if (!theme_seen) print "webkit_theme = glorious"
+    if (!debug_seen) print "debug_mode = true"
+    if (!fallback_seen) print "detect_theme_errors = true"
+  }
+  /^[[:space:]]*\[[^]]+\][[:space:]]*$/ {
+    if (in_greeter) add_missing_greeter_settings()
+    in_greeter = ($0 ~ /^\[greeter\][[:space:]]*$/)
+    if (in_greeter) greeter_found = 1
+    print
+    next
+  }
+  in_greeter && /^[[:space:]]*webkit_theme[[:space:]]*=/ {
+    if (!theme_seen) print "webkit_theme = glorious"
+    theme_seen = 1
+    next
+  }
+  in_greeter && /^[[:space:]]*debug_mode[[:space:]]*=/ {
+    if (!debug_seen) print "debug_mode = true"
+    debug_seen = 1
+    next
+  }
+  in_greeter && /^[[:space:]]*detect_theme_errors[[:space:]]*=/ {
+    if (!fallback_seen) print "detect_theme_errors = true"
+    fallback_seen = 1
+    next
+  }
+  { print }
+  END {
+    if (in_greeter) add_missing_greeter_settings()
+    if (!greeter_found) {
+      print ""
+      print "[greeter]"
+      print "webkit_theme = glorious"
+      print "debug_mode = true"
+      print "detect_theme_errors = true"
+    }
+  }
+' "$greeter_tmp_dir/original" > "$greeter_tmp_dir/updated"
+sudo install -m 644 "$greeter_tmp_dir/updated" "$greeter_config"
+rm -rf -- "$greeter_tmp_dir"
 
 # Replace the selected display manager for the next boot; do not stop the
 # current graphical session while this installer is running.

@@ -14,7 +14,7 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
-- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y el tema Glorious. Guarda la selección del gestor anterior y la configuración del greeter, desactiva el gestor anterior y habilita LightDM para el próximo arranque sin cerrar la sesión gráfica actual. Los paquetes del gestor anterior se conservan.
+- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y el tema Glorious. Guarda la selección del gestor anterior y conserva el resto de la configuración del greeter; activa el modo de depuración y el tema de respaldo para evitar fallos de arranque. Desactiva el gestor anterior y habilita LightDM para el próximo arranque sin cerrar la sesión gráfica actual. Los paquetes del gestor anterior se conservan.
 - **Dependencias de sesión:** instala Niri, Noctalia, Dolphin, el portal de escritorio y sus backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard.
 - **Instalador actualizable:** al volver a ejecutar `install.sh`, actualiza las configuraciones, conserva los respaldos de la primera instalación y registra los paquetes agregados en cada ejecución.
 - **Desinstalador:** guarda una copia de las configuraciones instaladas, restaura las configuraciones anteriores y propone quitar los paquetes que incorporó el instalador.
@@ -51,6 +51,10 @@ Desde la carpeta del proyecto, ejecuta:
 ```
 
 El desinstalador restaura las configuraciones anteriores y la selección del gestor de inicio guardada antes de instalar LightDM. Reinicia para aplicar esa selección. La configuración que estaba activa justo antes de desinstalar se conserva en `~/.local/state/niri-noctalia-dotfiles/uninstall-saved`; los respaldos de la primera instalación permanecen en `~/.local/state/niri-noctalia-dotfiles/backup`. El script solicita confirmación de `pacman` antes de quitar paquetes agregados por el instalador.
+
+## Recuperar una pantalla de inicio fallida
+
+Si LightDM queda en un ciclo de reinicios o muestra una pantalla negra, cambia a una TTY con **Ctrl+Alt+F3**, inicia sesión y ejecuta `recover-login.sh` desde la carpeta del proyecto. El script restaura la configuración previa del greeter, vuelve a seleccionar el gestor guardado y detiene el ciclo hasta reiniciar. Después ejecuta `sudo reboot`.
 
 ## Estructura
 
