@@ -1,0 +1,40 @@
+[shell]
+polkit_agent = true
+corner_radius_scale = 0.85
+button_borders = false
+card_borders = false
+input_borders = true
+popup_borders = true
+popup_shadows = true
+settings_window_translucent = true
+
+[shell.panel]
+transparency_mode = "glass"
+borders = true
+border_color = "outline_variant"
+border_width = 0.8
+shadow = true
+
+[theme]
+mode = "dark"
+shell_mode = "follow"
+source = "custom"
+community_palette = ""
+custom_palette = "BlueDusk"
+pure_black_dark = false
+
+[theme.templates]
+builtin_ids = ["qt", "kcolorscheme"]
+enable_builtin_templates = true
+enable_community_templates = true
+community_ids = ["pywalfox"]
+
+[location]
+auto_locate = false
+address = "Montevideo, Uruguay"
+
+[wallpaper]
+directory = "/home/itzcinder/Imágenes/Noctalia"
+
+[wallpaper.default]
+path = "/home/itzcinder/Imágenes/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
