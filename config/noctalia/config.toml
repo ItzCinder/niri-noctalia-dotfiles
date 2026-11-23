@@ -38,3 +38,6 @@ directory = "~/Pictures/Noctalia"
 
 [wallpaper.default]
 path = "~/Pictures/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
+
+[plugins]
+enabled = ["raycursive/niri-displays"]

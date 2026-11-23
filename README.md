@@ -10,7 +10,7 @@
 
 - **Niri:** configuración modular para animaciones, pantalla, input, layout, reglas de ventanas, atajos y aplicaciones de inicio.
 - **Enfoque del puntero:** no usa `focus-follows-mouse`; mover el puntero entre ventanas no cambia el foco automáticamente.
-- **Noctalia v5:** barra, paneles, tema oscuro personalizado, paleta actual, transparencias y wallpaper.
+- **Noctalia v5:** barra, paneles, tema oscuro personalizado, paleta actual, transparencias y wallpaper. El plugin Niri Displays permite cambiar resolución y frecuencia por monitor; se abre con `Mod+Shift+M`.
 - **Selector de archivos:** configura `xdg-desktop-portal` para preferir el backend KDE de Dolphin y usar GTK como alternativa. Mantiene el tema Breeze y la paleta Noctalia en las aplicaciones Qt y en el portal KDE.
 - **Dolphin y KDE:** aplica la paleta oscura `noctalia`, iconos Breeze oscuros y el estilo Breeze. Dolphin conserva visible su barra de menú; el selector KDE usa vista de detalles, panel de lugares más ancho, ruta completa y previsualización.
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
@@ -32,7 +32,7 @@
 
 La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. Niri conserva el desenfoque con un solo pase y las animaciones usan una tolerancia de asentamiento menos estricta. Kitty mantiene sus opciones actuales de transparencia y padding; su frecuencia de redibujado conserva el valor equilibrado del programa. Se mantienen la transparencia, el desenfoque, las animaciones y la composición visual.
 
-No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Adapta la escala y el modo de pantalla en `config/niri/cfg/display.kdl` si el equipo lo necesita. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
+No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Niri Displays abre un panel independiente para cambiar resolución y frecuencia por monitor durante la sesión; Niri no conserva esos cambios temporales al reiniciar. El Monitor integrado de Noctalia 5.6 solo expone controles de brillo, así que el acceso al panel se hace con `Mod+Shift+M`. Para establecer valores permanentes, configura la salida correspondiente en `config/niri/cfg/display.kdl`. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
 
 ## Instalar o actualizar
 
