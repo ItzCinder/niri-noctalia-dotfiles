@@ -14,7 +14,7 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
-- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y el tema Glorious. Guarda la selección del gestor anterior y conserva el resto de la configuración del greeter; activa el modo de depuración y el tema de respaldo para evitar fallos de arranque. Desactiva el gestor anterior y habilita LightDM para el próximo arranque sin cerrar la sesión gráfica actual. Los paquetes del gestor anterior se conservan.
+- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y una variante de Glorious con los colores de la paleta Noctalia actual. Conserva el resto de la configuración del greeter, activa depuración y detección de errores, y configura el tema para el próximo arranque. Los paquetes del gestor anterior se conservan.
 - **Dependencias de sesión:** instala Niri, Noctalia, Dolphin, el portal de escritorio y sus backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard.
 - **Instalador actualizable:** al volver a ejecutar `install.sh`, actualiza las configuraciones, conserva los respaldos de la primera instalación y registra los paquetes agregados en cada ejecución.
 - **Desinstalador:** guarda una copia de las configuraciones instaladas, restaura las configuraciones anteriores y propone quitar los paquetes que incorporó el instalador.
@@ -23,7 +23,7 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 
 - CachyOS.
 - Ejecutar los scripts como usuario normal, sin `sudo`.
-- `yay` instalado para obtener `windows-10-cursor` desde AUR.
+- `yay` instalado para obtener `windows-10-cursor` y el tema Glorious desde AUR.
 - Conexión a Internet y `sudo` disponible para instalar paquetes con `pacman`.
 
 ## Instalar o actualizar
@@ -51,10 +51,6 @@ Desde la carpeta del proyecto, ejecuta:
 ```
 
 El desinstalador restaura las configuraciones anteriores y la selección del gestor de inicio guardada antes de instalar LightDM. Reinicia para aplicar esa selección. La configuración que estaba activa justo antes de desinstalar se conserva en `~/.local/state/niri-noctalia-dotfiles/uninstall-saved`; los respaldos de la primera instalación permanecen en `~/.local/state/niri-noctalia-dotfiles/backup`. El script solicita confirmación de `pacman` antes de quitar paquetes agregados por el instalador.
-
-## Recuperar una pantalla de inicio fallida
-
-Si LightDM queda en un ciclo de reinicios o muestra una pantalla negra, cambia a una TTY con **Ctrl+Alt+F3** e inicia sesión. Ejecuta `./recover-login.sh` desde la carpeta del proyecto para restaurar la configuración previa del greeter, o `./recover-login.sh --gdm` para instalar y volver al gestor de inicio de GNOME. Luego ejecuta `sudo reboot`.
 
 ## Estructura
 

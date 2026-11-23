@@ -54,6 +54,10 @@ if [[ -e "$STATE/created/display-manager-saved" && ! -e "$STATE/created/display-
   touch "$STATE/created/display-manager-restored"
   echo "Se restauró la selección anterior del gestor de inicio. Reinicia para aplicarla."
 fi
+if [[ -e "$STATE/created/lightdm-theme-installed" ]]; then
+  sudo rm -rf -- /usr/share/lightdm-webkit/themes/niri-noctalia
+  rm -f -- "$STATE/created/lightdm-theme-installed"
+fi
 
 if [[ ! -e "$STATE/created/kept-wallpaper" ]]; then
   rm -f -- "$WALLPAPER"

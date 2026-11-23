@@ -5,7 +5,9 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
 WALLPAPER="$HOME/Pictures/Noctalia"
-PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
+PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter jq xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
+LIGHTDM_THEME_NAME=niri-noctalia
+LIGHTDM_THEME_DIR="/usr/share/lightdm-webkit/themes/$LIGHTDM_THEME_NAME"
 UPDATING=0
 KEEP_EXISTING_WALLPAPER=0
 
@@ -49,11 +51,25 @@ pacman -Qq | sort -u > "$STATE/packages-before-run.txt"
 previously_added="$STATE/packages-added.txt"
 sudo pacman -Syu --needed "${PKGS[@]}"
 yay -S --needed windows-10-cursor lightdm-webkit2-theme-glorious
-for binary in niri noctalia; do
+for binary in niri noctalia jq; do
   if ! command -v "$binary" >/dev/null 2>&1; then
     echo "No encuentro '$binary' en PATH después de instalar los paquetes. No copié la configuración." >&2
     exit 1
   fi
+done
+for palette_key in primary on_surface surface error tertiary; do
+  palette_color="$(jq -er ".dark.$palette_key" "$ROOT/config/noctalia/BlueDusk.json")"
+  if [[ ! "$palette_color" =~ ^#[[:xdigit:]]{6}$ ]]; then
+    echo "Color inválido en la paleta Noctalia: $palette_key=$palette_color" >&2
+    exit 1
+  fi
+  case "$palette_key" in
+    primary) LIGHTDM_PRIMARY="$palette_color" ;;
+    on_surface) LIGHTDM_FOREGROUND="$palette_color" ;;
+    surface) LIGHTDM_SURFACE="$palette_color" ;;
+    error) LIGHTDM_ERROR="$palette_color" ;;
+    tertiary) LIGHTDM_SUCCESS="$palette_color" ;;
+  esac
 done
 pacman -Qq | sort -u > "$STATE/packages-after.txt"
 newly_added="$STATE/packages-added.new"
@@ -119,14 +135,20 @@ sudo install -d -m 755 /etc/lightdm/lightdm.conf.d
 printf '[Seat:*]\ngreeter-session=lightdm-webkit2-greeter\n' | sudo tee /etc/lightdm/lightdm.conf.d/50-niri-noctalia.conf >/dev/null
 greeter_config=/etc/lightdm/lightdm-webkit2-greeter.conf
 greeter_tmp_dir="$(mktemp -d)"
-if sudo test -f "$greeter_config"; then
+saved_greeter_config="$STATE/system-backup/lightdm-webkit2-greeter.conf"
+if [[ -e "$STATE/created/display-manager-saved" && -s "$saved_greeter_config" ]] &&
+   sudo test -f "$greeter_config" &&
+   ! sudo grep -Eq '^[[:space:]]*(debug_mode|detect_theme_errors)[[:space:]]*=' "$greeter_config"; then
+  # Recover settings lost by the previous installer version before merging.
+  cp -a "$saved_greeter_config" "$greeter_tmp_dir/original"
+elif sudo test -f "$greeter_config"; then
   sudo cat "$greeter_config" > "$greeter_tmp_dir/original"
 else
   : > "$greeter_tmp_dir/original"
 fi
-awk '
+awk -v theme_name="$LIGHTDM_THEME_NAME" '
   function add_missing_greeter_settings() {
-    if (!theme_seen) print "webkit_theme = glorious"
+    if (!theme_seen) print "webkit_theme = " theme_name
     if (!debug_seen) print "debug_mode = true"
     if (!fallback_seen) print "detect_theme_errors = true"
   }
@@ -138,7 +160,7 @@ awk '
     next
   }
   in_greeter && /^[[:space:]]*webkit_theme[[:space:]]*=/ {
-    if (!theme_seen) print "webkit_theme = glorious"
+    if (!theme_seen) print "webkit_theme = " theme_name
     theme_seen = 1
     next
   }
@@ -158,7 +180,7 @@ awk '
     if (!greeter_found) {
       print ""
       print "[greeter]"
-      print "webkit_theme = glorious"
+      print "webkit_theme = " theme_name
       print "debug_mode = true"
       print "detect_theme_errors = true"
     }
@@ -167,6 +189,54 @@ awk '
 sudo install -m 644 "$greeter_tmp_dir/updated" "$greeter_config"
 rm -rf -- "$greeter_tmp_dir"
 
+# Build a separately named Glorious theme and tint it with Noctalia's palette.
+glorious_theme_source=/usr/share/lightdm-webkit/themes/glorious
+if ! sudo test -d "$glorious_theme_source"; then
+  echo "No encuentro el tema Glorious instalado en $glorious_theme_source." >&2
+  exit 1
+fi
+if [[ ! -e "$STATE/created/lightdm-theme-installed" ]] && sudo test -e "$LIGHTDM_THEME_DIR"; then
+  echo "Ya existe $LIGHTDM_THEME_DIR y no pertenece a esta instalación; no lo sobrescribo." >&2
+  exit 1
+fi
+sudo install -d -m 755 "$LIGHTDM_THEME_DIR"
+touch "$STATE/created/lightdm-theme-installed"
+sudo cp -a "$glorious_theme_source/." "$LIGHTDM_THEME_DIR/"
+sudo sed -i -E 's/^name=.*/name=niri-noctalia/' "$LIGHTDM_THEME_DIR/index.theme"
+theme_css="$LIGHTDM_THEME_DIR/css/global.css"
+set_theme_color() {
+  local variable="$1" value="$2"
+  sudo sed -i -E "s|^([[:space:]]*${variable}:[[:space:]]*).*(;[[:space:]]*)$|\\1${value}\\2|" "$theme_css"
+  if ! sudo grep -Fq -- "${variable}: ${value};" "$theme_css"; then
+    echo "No pude aplicar $variable=$value a la variante LightDM." >&2
+    exit 1
+  fi
+}
+set_theme_color --global-bg "${LIGHTDM_SURFACE}E6"
+set_theme_color --global-fg "${LIGHTDM_FOREGROUND}FF"
+set_theme_color --button-bg-hover "${LIGHTDM_PRIMARY}30"
+set_theme_color --button-bg-focus "${LIGHTDM_PRIMARY}55"
+set_theme_color --button-bg-active "${LIGHTDM_PRIMARY}70"
+set_theme_color --tooltip-error-bg "${LIGHTDM_ERROR}60"
+set_theme_color --tooltip-success-bg "${LIGHTDM_SUCCESS}60"
+set_theme_color --login-form-elements-fg "$LIGHTDM_FOREGROUND"
+set_theme_color --login-failed-bg "${LIGHTDM_ERROR}60"
+set_theme_color --login-success-bg "${LIGHTDM_SUCCESS}60"
+set_theme_color --sidebar-group-elements-bg "${LIGHTDM_PRIMARY}22"
+set_theme_color --sidebar-group-elements-fg "$LIGHTDM_FOREGROUND"
+set_theme_color --sidebar-group-elements-button-bg "${LIGHTDM_PRIMARY}14"
+set_theme_color --sidebar-elements-bg "${LIGHTDM_PRIMARY}22"
+set_theme_color --main-screen-button-bg "${LIGHTDM_PRIMARY}22"
+set_theme_color --arrow-indicator-bg "$LIGHTDM_PRIMARY"
+set_theme_color --arrow-indicator-bg-fade "${LIGHTDM_PRIMARY}20"
+if ! sudo grep -Fq "name=$LIGHTDM_THEME_NAME" "$LIGHTDM_THEME_DIR/index.theme" ||
+   ! sudo grep -Fq "webkit_theme = $LIGHTDM_THEME_NAME" "$greeter_config" ||
+   ! sudo grep -Fq 'debug_mode = true' "$greeter_config" ||
+   ! sudo grep -Fq 'detect_theme_errors = true' "$greeter_config"; then
+  echo "La configuración integrada de LightDM no pasó la validación." >&2
+  exit 1
+fi
+
 # Replace the selected display manager for the next boot; do not stop the
 # current graphical session while this installer is running.
 display_manager_unit="$(basename "$(readlink -f /etc/systemd/system/display-manager.service 2>/dev/null || true)")"
@@ -174,6 +244,7 @@ if [[ -n "$display_manager_unit" && "$display_manager_unit" != lightdm.service ]
   sudo systemctl disable "$display_manager_unit"
 fi
 sudo systemctl enable lightdm.service
+sudo systemctl reset-failed lightdm.service
 
 systemctl --user restart xdg-desktop-portal.service
 if ((!KEEP_EXISTING_WALLPAPER)); then
