@@ -3,7 +3,11 @@ set -euo pipefail
 
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
-WALLPAPER="$HOME/Pictures/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
+PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || true)"
+if [[ -z "$PICTURES_DIR" || "$PICTURES_DIR" == "$HOME" ]]; then
+  PICTURES_DIR="$HOME/Pictures"
+fi
+WALLPAPER="$PICTURES_DIR/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
 if [[ ! -e "$STATE/installed" ]]; then
   echo "No encuentro una instalación registrada en $STATE." >&2
   exit 1
@@ -63,7 +67,7 @@ if [[ ! -e "$STATE/created/kept-wallpaper" ]]; then
   rm -f -- "$WALLPAPER"
 fi
 rm -f "$STATE/created/kept-wallpaper"
-rmdir "$HOME/Pictures/Noctalia" 2>/dev/null || true
+rmdir "$PICTURES_DIR/Noctalia" 2>/dev/null || true
 
 added=()
 if [[ -f "$STATE/packages-added.txt" ]]; then

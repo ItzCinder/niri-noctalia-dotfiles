@@ -4,9 +4,13 @@ set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
-WALLPAPER="$HOME/Pictures/Noctalia"
+PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || true)"
+if [[ -z "$PICTURES_DIR" || "$PICTURES_DIR" == "$HOME" ]]; then
+  PICTURES_DIR="$HOME/Pictures"
+fi
+WALLPAPER="$PICTURES_DIR/Noctalia"
 NIRI_WALLPAPER="$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png"
-PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter jq xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
+PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter jq xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland breeze playerctl brightnessctl wl-clipboard)
 LIGHTDM_THEME_NAME=niri-noctalia
 LIGHTDM_THEME_DIR="/usr/share/lightdm-webkit/themes/$LIGHTDM_THEME_NAME"
 UPDATING=0
@@ -29,7 +33,7 @@ fi
 if [[ -e "$STATE/installed" ]]; then
   UPDATING=1
 fi
-for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf kitty/current-theme.conf fastfetch/config.jsonc fastfetch/arch.txt dolphinrc kdeglobals xdg-desktop-portal/niri-portals.conf environment.d/90-gnome-qt.conf wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
+for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf kitty/current-theme.conf fastfetch/config.jsonc fastfetch/arch.txt dolphinrc kdeglobals xdg-desktop-portal/niri-portals.conf environment.d/90-kde-qt.conf wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
   [[ -e "$ROOT/config/$f" ]] || { echo "Falta el archivo del paquete: config/$f" >&2; exit 1; }
 done
 if [[ -e "$WALLPAPER/wallhaven-e7xx6r_1920x1080-dark10.png" ]] &&
@@ -129,7 +133,15 @@ cp -a "$ROOT/config/fastfetch/." "$CONFIG/fastfetch/"
 cp -a "$ROOT/config/dolphinrc" "$CONFIG/dolphinrc"
 cp -a "$ROOT/config/kdeglobals" "$CONFIG/kdeglobals"
 cp -a "$ROOT/config/xdg-desktop-portal/niri-portals.conf" "$CONFIG/xdg-desktop-portal/"
-cp -a "$ROOT/config/environment.d/90-gnome-qt.conf" "$CONFIG/environment.d/"
+cp -a "$ROOT/config/environment.d/90-kde-qt.conf" "$CONFIG/environment.d/"
+legacy_qt_env="$CONFIG/environment.d/90-gnome-qt.conf"
+if [[ -f "$legacy_qt_env" ]] && grep -qx '# Qt6ct palette and Breeze widget style for Qt apps in the Niri session\.' "$legacy_qt_env" &&
+   grep -qx 'QT_QPA_PLATFORMTHEME=qt6ct' "$legacy_qt_env" &&
+   grep -qx 'QT_STYLE_OVERRIDE=breeze' "$legacy_qt_env"; then
+  rm -f -- "$legacy_qt_env"
+fi
+wallpaper_toml_path="$(printf '%s' "$WALLPAPER" | sed 's/[\\&|"]/\\&/g')"
+sed -i "s|~/Pictures/Noctalia|$wallpaper_toml_path|g" "$CONFIG/noctalia/config.toml"
 
 # Configure the WebKit2 greeter without replacing LightDM's main configuration.
 sudo install -d -m 755 /etc/lightdm/lightdm.conf.d
@@ -254,6 +266,9 @@ fi
 sudo systemctl enable lightdm.service
 sudo systemctl reset-failed lightdm.service
 
+# Update the running user manager too; environment.d is otherwise read only
+# when the manager starts, leaving portal backends on a stale Qt theme.
+systemctl --user set-environment QT_QPA_PLATFORMTHEME=kde QT_STYLE_OVERRIDE=Breeze
 systemctl --user restart xdg-desktop-portal.service
 if ((!KEEP_EXISTING_WALLPAPER)); then
   cp -a "$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png" "$WALLPAPER/"
@@ -261,7 +276,6 @@ if ((!KEEP_EXISTING_WALLPAPER)); then
 else
   touch "$STATE/created/kept-wallpaper"
 fi
-sed -i "s|/home/itzcinder/Imágenes/Noctalia|$WALLPAPER|g" "$CONFIG/noctalia/config.toml"
 niri validate --config "$CONFIG/niri/config.kdl"
 noctalia config validate
 touch "$STATE/installed"

@@ -9,7 +9,7 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - **Niri:** configuración modular para animaciones, pantalla, input, layout, reglas de ventanas, atajos y aplicaciones de inicio.
 - **Enfoque del puntero:** no usa `focus-follows-mouse`; mover el puntero entre ventanas no cambia el foco automáticamente.
 - **Noctalia v5:** barra, paneles, tema oscuro personalizado, paleta actual, transparencias y wallpaper.
-- **Selector de archivos:** configura `xdg-desktop-portal` para preferir el backend KDE de Dolphin y usar GTK como alternativa. Instala el portal base y ambos backends.
+- **Selector de archivos:** configura `xdg-desktop-portal` para preferir el backend KDE de Dolphin y usar GTK como alternativa. Mantiene el tema Breeze y la paleta Noctalia en las aplicaciones Qt y en el portal KDE.
 - **Dolphin y KDE:** aplica la paleta oscura `noctalia`, iconos Breeze oscuros y el estilo Breeze. Dolphin conserva visible su barra de menú; el selector KDE usa vista de detalles, panel de lugares más ancho, ruta completa y previsualización.
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
@@ -26,6 +26,12 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - `yay` instalado para obtener `windows-10-cursor` y el tema Glorious desde AUR.
 - Conexión a Internet y `sudo` disponible para instalar paquetes con `pacman`.
 
+## Rendimiento y compatibilidad
+
+La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. Niri conserva el desenfoque con un solo pase y las animaciones usan una tolerancia de asentamiento menos estricta. Kitty mantiene sus opciones actuales de transparencia y padding; su frecuencia de redibujado conserva el valor equilibrado del programa. Se mantienen la transparencia, el desenfoque, las animaciones y la composición visual.
+
+No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Adapta la escala y el modo de pantalla en `config/niri/cfg/display.kdl` si el equipo lo necesita. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
+
 ## Instalar o actualizar
 
 Desde la carpeta del proyecto, ejecuta:
@@ -36,7 +42,7 @@ Desde la carpeta del proyecto, ejecuta:
 
 En la primera instalación, el script respalda las configuraciones que ya existan en `~/.config`, instala las dependencias y copia los archivos del proyecto. Si ya existe el marcador `~/.local/state/niri-noctalia-dotfiles/installed`, el mismo comando funciona como actualizador: reemplaza los archivos administrados por el proyecto y conserva los respaldos originales.
 
-Si el wallpaper del proyecto ya existe en `~/Pictures/Noctalia` y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión. GNOME permanece disponible como sesión alternativa.
+Si el wallpaper del proyecto ya existe en la carpeta `Noctalia` dentro de Imágenes y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión. GNOME permanece disponible como sesión alternativa.
 
 ## Demostración
 
@@ -61,7 +67,7 @@ El desinstalador restaura las configuraciones anteriores y la selección del ges
 │       └── (video.mp4 se añadirá aquí)
 └── config/
     ├── dolphinrc
-    ├── environment.d/90-gnome-qt.conf
+    ├── environment.d/90-kde-qt.conf
     ├── fastfetch/
     │   ├── arch.txt
     │   └── config.jsonc
@@ -85,4 +91,4 @@ El desinstalador restaura las configuraciones anteriores y la selección del ges
 ## Notas
 
 - La salida de pantalla de ejemplo permanece comentada en `config/niri/cfg/display.kdl`; ajusta ese archivo si necesitas fijar resolución o escala.
-- Si Noctalia no encuentra el wallpaper, revisa que `~/Pictures/Noctalia` exista y que `config/noctalia/config.toml` apunte a ese directorio.
+- Si Noctalia no encuentra el wallpaper, revisa que la carpeta `Noctalia` dentro de Imágenes exista y que `config/noctalia/config.toml` apunte a ese directorio.

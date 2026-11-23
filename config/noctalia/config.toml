@@ -34,7 +34,7 @@ auto_locate = false
 address = "Montevideo, Uruguay"
 
 [wallpaper]
-directory = "/home/itzcinder/Imágenes/Noctalia"
+directory = "~/Pictures/Noctalia"
 
 [wallpaper.default]
-path = "/home/itzcinder/Imágenes/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
+path = "~/Pictures/Noctalia/wallhaven-e7xx6r_1920x1080-dark10.png"
