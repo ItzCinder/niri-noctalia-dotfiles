@@ -34,6 +34,31 @@ La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Ra
 
 No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Niri Displays abre un panel independiente para cambiar resolución y frecuencia por monitor durante la sesión; Niri no conserva esos cambios temporales al reiniciar. El Monitor integrado de Noctalia 5.6 solo expone controles de brillo, así que el acceso al panel se hace con `Mod+Shift+M`. Para establecer valores permanentes, configura la salida correspondiente en `config/niri/cfg/display.kdl`. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
 
+## Binds
+
+`Mod` es la tecla Super (Windows). Estos son los atajos principales definidos en `config/niri/cfg/keybinds.kdl`:
+
+| Atajo | Acción |
+| --- | --- |
+| `Mod + Enter` | Abrir Kitty |
+| `Mod + B` | Abrir Firefox |
+| `Mod + E` | Abrir Dolphin |
+| `Mod + S` | Abrir el Centro de control de Noctalia |
+| `Mod + Shift + S` | Abrir los ajustes de Noctalia |
+| `Mod + Shift + Enter` | Abrir el selector de wallpaper |
+| `Mod + Shift + M` | Abrir Niri Displays para cambiar resolución y frecuencia por monitor |
+| `Mod + Q` | Cerrar la ventana enfocada |
+| `Mod + H/J/K/L` | Mover el foco entre ventanas y columnas |
+| `Mod + 1` … `Mod + 9` | Cambiar al espacio de trabajo indicado |
+| `Mod + F` | Maximizar la columna enfocada |
+| `Mod + Shift + F` | Alternar pantalla completa |
+| `Mod + Tab` | Volver al espacio de trabajo anterior |
+| `Print` | Captura de región con anotación |
+| `Shift + Print` | Captura de pantalla completa con anotación |
+| Teclas multimedia | Controlar volumen, brillo y reproducción/pausa |
+
+La lista completa, incluidos los atajos para mover ventanas entre monitores y espacios de trabajo, está en `config/niri/cfg/keybinds.kdl`. Niri también muestra el resumen de atajos con `Mod + Shift + Esc`.
+
 ## Instalar o actualizar
 
 Desde la carpeta del proyecto, ejecuta:
