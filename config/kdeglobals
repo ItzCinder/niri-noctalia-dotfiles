@@ -1,0 +1,169 @@
+[ColorEffects:Disabled]
+Color=16,13,23
+ColorAmount=0
+ColorEffect=0
+ContrastAmount=0.65
+ContrastEffect=1
+IntensityAmount=0.1
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=74,68,86
+ColorAmount=0.025
+ColorEffect=2
+ContrastAmount=0.1
+ContrastEffect=2
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=29,26,37
+BackgroundNormal=44,40,52
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:Complementary]
+BackgroundAlternate=29,26,37
+BackgroundNormal=21,18,28
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=223,208,255
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:Header]
+BackgroundAlternate=21,18,28
+BackgroundNormal=33,30,41
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:Header][Inactive]
+BackgroundAlternate=33,30,41
+BackgroundNormal=21,18,28
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:Selection]
+BackgroundAlternate=29,26,37
+BackgroundNormal=208,188,255
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=59,0,145
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=147,0,10
+ForegroundNeutral=171,0,155
+ForegroundNormal=59,0,145
+ForegroundPositive=171,0,155
+ForegroundVisited=195,171,255
+
+[Colors:Tooltip]
+BackgroundAlternate=21,18,28
+BackgroundNormal=33,30,41
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:View]
+BackgroundAlternate=33,30,41
+BackgroundNormal=21,18,28
+DecorationFocus=223,208,255
+DecorationHover=59,0,145
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[Colors:Window]
+BackgroundAlternate=111,35,243
+BackgroundNormal=33,30,41
+DecorationFocus=208,188,255
+DecorationHover=208,188,255
+ForegroundActive=208,188,255
+ForegroundInactive=204,195,217
+ForegroundLink=208,188,255
+ForegroundNegative=255,180,171
+ForegroundNeutral=255,172,233
+ForegroundNormal=231,223,239
+ForegroundPositive=255,172,233
+ForegroundVisited=195,171,255
+
+[General]
+ColorScheme=noctalia
+Name=noctalia
+
+[Icons]
+Theme=breeze-dark
+
+[KDE]
+contrast=4
+
+[KFileDialog Settings]
+Allow Expansion=false
+Automatically select filename extension=true
+Breadcrumb Navigation=true
+Decoration position=2
+Show Full Path=false
+Show Inline Previews=true
+Show Preview=false
+Show Speedbar=true
+Show hidden files=false
+Sort by=Name
+Sort directories first=true
+Sort hidden files last=false
+Sort reversed=false
+Speedbar Width=133
+View Style=DetailTree
+
+[UiSettings]
+ColorScheme=noctalia
+
+[WM]
+activeBackground=111,35,243
+activeBlend=223,208,255
+activeForeground=223,208,255
+inactiveBackground=21,18,28
+inactiveBlend=204,195,217
+inactiveForeground=204,195,217
