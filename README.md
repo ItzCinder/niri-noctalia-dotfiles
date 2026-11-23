@@ -71,10 +71,6 @@ En la primera instalación, el script respalda las configuraciones que ya exista
 
 Si el wallpaper del proyecto ya existe en la carpeta `Noctalia` dentro de Imágenes y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión. GNOME permanece disponible como sesión alternativa.
 
-## Demostración
-
-La carpeta `assets/demo/` está preparada para el video de demostración. Cuando esté listo, guárdalo como [`video.mp4`](assets/demo/video.mp4).
-
 ## Desinstalar
 
 Desde la carpeta del proyecto, ejecuta:
@@ -85,13 +81,16 @@ Desde la carpeta del proyecto, ejecuta:
 
 El desinstalador restaura las configuraciones anteriores y la selección del gestor de inicio guardada antes de instalar LightDM. Reinicia para aplicar esa selección. La configuración que estaba activa justo antes de desinstalar se conserva en `~/.local/state/niri-noctalia-dotfiles/uninstall-saved`; los respaldos de la primera instalación permanecen en `~/.local/state/niri-noctalia-dotfiles/backup`. El script solicita confirmación de `pacman` antes de quitar paquetes agregados por el instalador.
 
+## Video
+
+Próximamente.
+
+<video src="assets/demo/video.mp4" controls width="100%"></video>
+
 ## Estructura
 
 ```text
 .
-├── assets/
-│   └── demo/
-│       └── (video.mp4 se añadirá aquí)
 └── config/
     ├── dolphinrc
     ├── environment.d/90-kde-qt.conf
