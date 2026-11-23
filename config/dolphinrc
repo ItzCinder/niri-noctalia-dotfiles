@@ -5,6 +5,10 @@ ViewPropsTimestamp=2026,11,16,5,28,21.845
 [KFileDialog Settings]
 Places Icons Auto-resize=false
 Places Icons Static Size=22
+Show hidden files=false
+Show Preview=false
+Show Speedbar=true
+View Style=DetailTree
 
 [MainWindow]
 MenuBar=Disabled

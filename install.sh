@@ -5,7 +5,7 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
 WALLPAPER="$HOME/Pictures/Noctalia"
-PKGS=(niri noctalia kitty dolphin lightdm-webkit2-theme-glorious xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
+PKGS=(niri noctalia kitty dolphin fastfetch lightdm-webkit2-theme-glorious xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
 UPDATING=0
 KEEP_EXISTING_WALLPAPER=0
 
@@ -26,7 +26,7 @@ fi
 if [[ -e "$STATE/installed" ]]; then
   UPDATING=1
 fi
-for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf dolphinrc kdeglobals wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
+for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf kitty/current-theme.conf fastfetch/config.jsonc fastfetch/arch.txt dolphinrc kdeglobals xdg-desktop-portal/niri-portals.conf environment.d/90-gnome-qt.conf wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
   [[ -e "$ROOT/config/$f" ]] || { echo "Falta el archivo del paquete: config/$f" >&2; exit 1; }
 done
 if [[ -e "$WALLPAPER/wallhaven-e7xx6r_1920x1080-dark10.png" ]] &&
@@ -68,19 +68,24 @@ rm -f "$newly_added"
 rm -f "$STATE/packages-before-run.txt"
 
 mkdir -p "$STATE/backup" "$STATE/created" "$WALLPAPER"
-for item in niri noctalia kitty dolphinrc kdeglobals; do
+for item in niri noctalia kitty fastfetch dolphinrc kdeglobals xdg-desktop-portal environment.d; do
   if [[ -e "$CONFIG/$item" && ! -e "$STATE/created/had-$item" ]]; then
     cp -a "$CONFIG/$item" "$STATE/backup/$item"
     touch "$STATE/created/had-$item"
   fi
 done
-mkdir -p "$CONFIG/niri/cfg" "$CONFIG/noctalia/palettes" "$CONFIG/kitty"
+mkdir -p "$CONFIG/niri/cfg" "$CONFIG/noctalia/palettes" "$CONFIG/kitty" "$CONFIG/fastfetch" "$CONFIG/xdg-desktop-portal" "$CONFIG/environment.d"
 cp -a "$ROOT/config/niri/." "$CONFIG/niri/"
 cp -a "$ROOT/config/noctalia/config.toml" "$ROOT/config/noctalia/bar.toml" "$CONFIG/noctalia/"
 cp -a "$ROOT/config/noctalia/BlueDusk.json" "$CONFIG/noctalia/palettes/"
 cp -a "$ROOT/config/kitty/kitty.conf" "$CONFIG/kitty/"
+cp -a "$ROOT/config/kitty/current-theme.conf" "$CONFIG/kitty/"
+cp -a "$ROOT/config/fastfetch/." "$CONFIG/fastfetch/"
 cp -a "$ROOT/config/dolphinrc" "$CONFIG/dolphinrc"
 cp -a "$ROOT/config/kdeglobals" "$CONFIG/kdeglobals"
+cp -a "$ROOT/config/xdg-desktop-portal/niri-portals.conf" "$CONFIG/xdg-desktop-portal/"
+cp -a "$ROOT/config/environment.d/90-gnome-qt.conf" "$CONFIG/environment.d/"
+systemctl --user restart xdg-desktop-portal.service
 if ((!KEEP_EXISTING_WALLPAPER)); then
   cp -a "$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png" "$WALLPAPER/"
   rm -f "$STATE/created/kept-wallpaper"

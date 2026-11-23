@@ -10,7 +10,7 @@ if [[ ! -e "$STATE/installed" ]]; then
 fi
 
 mkdir -p "$STATE/uninstall-saved"
-for item in niri noctalia kitty dolphinrc kdeglobals; do
+for item in niri noctalia kitty fastfetch dolphinrc kdeglobals xdg-desktop-portal environment.d; do
   if [[ -e "$CONFIG/$item" ]]; then
     cp -a "$CONFIG/$item" "$STATE/uninstall-saved/$item"
   fi
