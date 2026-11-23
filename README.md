@@ -1,6 +1,8 @@
-# Niri + Noctalia — CachyOS
+# Noria
 
-Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El conjunto también configura Kitty y Dolphin, aplica la paleta oscura violeta actual y conserva GNOME como sesión alternativa.
+**Noria** es una configuración personal de escritorio para CachyOS, basada en Niri y Noctalia. También configura Kitty y Dolphin, aplica una paleta oscura violeta y conserva GNOME como sesión alternativa.
+
+> **Versión:** `0.1-alpha`. Primera versión alpha: está en pruebas y puede cambiar mientras se sigue ajustando la instalación y la configuración.
 
 > **Nota de desarrollo:** la mayor parte de este proyecto fue creada con *vibecoding*: desarrollo iterativo asistido por modelos de inteligencia artificial a partir de instrucciones y revisiones humanas. Las decisiones, pruebas en el equipo y ajustes finales siguen siendo responsabilidad de quien mantiene el proyecto.
 
