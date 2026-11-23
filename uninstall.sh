@@ -19,6 +19,42 @@ for item in niri noctalia kitty fastfetch dolphinrc kdeglobals xdg-desktop-porta
     cp -a "$STATE/backup/$item" "$CONFIG/$item"
   fi
 done
+
+if [[ -e "$STATE/created/display-manager-saved" && ! -e "$STATE/created/display-manager-restored" ]]; then
+  # Remove our LightDM selection and put the previous display manager back.
+  sudo systemctl disable lightdm.service >/dev/null 2>&1 || true
+
+  for config_name in lightdm-webkit2-greeter.conf 50-niri-noctalia.conf; do
+    if [[ -e "$STATE/system-backup/had-$config_name" ]]; then
+      if [[ "$config_name" == 50-niri-noctalia.conf ]]; then
+        sudo install -d -m 755 /etc/lightdm/lightdm.conf.d
+        sudo install -m 644 "$STATE/system-backup/$config_name" "/etc/lightdm/lightdm.conf.d/$config_name"
+      else
+        sudo install -d -m 755 /etc/lightdm
+        sudo install -m 644 "$STATE/system-backup/$config_name" "/etc/lightdm/$config_name"
+      fi
+    elif [[ -e "$STATE/system-backup/absent-$config_name" ]]; then
+      if [[ "$config_name" == 50-niri-noctalia.conf ]]; then
+        sudo rm -f "/etc/lightdm/lightdm.conf.d/$config_name"
+      else
+        sudo rm -f "/etc/lightdm/$config_name"
+      fi
+    fi
+  done
+
+  previous_target="$(cat "$STATE/system-backup/display-manager-target" 2>/dev/null || true)"
+  previous_unit="${previous_target##*/}"
+  if [[ -n "$previous_unit" ]]; then
+    if [[ "$(cat "$STATE/system-backup/display-manager-enabled" 2>/dev/null || echo 0)" == 1 ]]; then
+      sudo systemctl enable "$previous_unit"
+    else
+      sudo systemctl disable "$previous_unit" >/dev/null 2>&1 || true
+    fi
+  fi
+  touch "$STATE/created/display-manager-restored"
+  echo "Se restauró la selección anterior del gestor de inicio. Reinicia para aplicarla."
+fi
+
 if [[ ! -e "$STATE/created/kept-wallpaper" ]]; then
   rm -f -- "$WALLPAPER"
 fi
@@ -34,5 +70,7 @@ if ((${#added[@]})); then
   sudo pacman -Rns "${added[@]}"
 fi
 rm -f -- "$STATE/installed" "$STATE/packages-before.txt" "$STATE/packages-after.txt" "$STATE/packages-added.txt"
+rm -f -- "$STATE/created/display-manager-saved" "$STATE/created/display-manager-restored"
+rm -rf -- "$STATE/system-backup"
 echo "Desinstalación completada. Se restauraron las configuraciones previas."
 echo "Las configuraciones retiradas se conservaron en $STATE/uninstall-saved y los respaldos originales en $STATE/backup."

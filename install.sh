@@ -5,7 +5,7 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
 WALLPAPER="$HOME/Pictures/Noctalia"
-PKGS=(niri noctalia kitty dolphin fastfetch lightdm-webkit2-theme-glorious xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
+PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
 UPDATING=0
 KEEP_EXISTING_WALLPAPER=0
 
@@ -48,7 +48,7 @@ fi
 pacman -Qq | sort -u > "$STATE/packages-before-run.txt"
 previously_added="$STATE/packages-added.txt"
 sudo pacman -Syu --needed "${PKGS[@]}"
-yay -S --needed windows-10-cursor
+yay -S --needed windows-10-cursor lightdm-webkit2-theme-glorious
 for binary in niri noctalia; do
   if ! command -v "$binary" >/dev/null 2>&1; then
     echo "No encuentro '$binary' en PATH después de instalar los paquetes. No copié la configuración." >&2
@@ -67,13 +67,41 @@ fi
 rm -f "$newly_added"
 rm -f "$STATE/packages-before-run.txt"
 
-mkdir -p "$STATE/backup" "$STATE/created" "$WALLPAPER"
+mkdir -p "$STATE/backup" "$STATE/created" "$STATE/system-backup" "$WALLPAPER"
 for item in niri noctalia kitty fastfetch dolphinrc kdeglobals xdg-desktop-portal environment.d; do
   if [[ -e "$CONFIG/$item" && ! -e "$STATE/created/had-$item" ]]; then
     cp -a "$CONFIG/$item" "$STATE/backup/$item"
     touch "$STATE/created/had-$item"
   fi
 done
+
+# Keep the current display-manager choice and LightDM configuration for uninstall.
+if [[ ! -e "$STATE/created/display-manager-saved" ]]; then
+  display_manager_target="$(readlink /etc/systemd/system/display-manager.service 2>/dev/null || true)"
+  printf '%s\n' "$display_manager_target" > "$STATE/system-backup/display-manager-target"
+  if [[ -n "$display_manager_target" ]]; then
+    display_manager_unit="${display_manager_target##*/}"
+    if systemctl is-enabled "$display_manager_unit" >/dev/null 2>&1; then
+      display_manager_enabled=1
+    else
+      display_manager_enabled=0
+    fi
+  else
+    display_manager_enabled=0
+  fi
+  printf '%s\n' "$display_manager_enabled" > "$STATE/system-backup/display-manager-enabled"
+  for system_file in /etc/lightdm/lightdm-webkit2-greeter.conf /etc/lightdm/lightdm.conf.d/50-niri-noctalia.conf; do
+    file_key="${system_file##*/}"
+    if sudo test -e "$system_file"; then
+      sudo cat "$system_file" > "$STATE/system-backup/$file_key"
+      touch "$STATE/system-backup/had-$file_key"
+    else
+      touch "$STATE/system-backup/absent-$file_key"
+    fi
+  done
+  touch "$STATE/created/display-manager-saved"
+fi
+
 mkdir -p "$CONFIG/niri/cfg" "$CONFIG/noctalia/palettes" "$CONFIG/kitty" "$CONFIG/fastfetch" "$CONFIG/xdg-desktop-portal" "$CONFIG/environment.d"
 cp -a "$ROOT/config/niri/." "$CONFIG/niri/"
 cp -a "$ROOT/config/noctalia/config.toml" "$ROOT/config/noctalia/bar.toml" "$CONFIG/noctalia/"
@@ -85,6 +113,24 @@ cp -a "$ROOT/config/dolphinrc" "$CONFIG/dolphinrc"
 cp -a "$ROOT/config/kdeglobals" "$CONFIG/kdeglobals"
 cp -a "$ROOT/config/xdg-desktop-portal/niri-portals.conf" "$CONFIG/xdg-desktop-portal/"
 cp -a "$ROOT/config/environment.d/90-gnome-qt.conf" "$CONFIG/environment.d/"
+
+# Configure the WebKit2 greeter without replacing LightDM's main configuration.
+sudo install -d -m 755 /etc/lightdm/lightdm.conf.d
+printf '[Seat:*]\ngreeter-session=lightdm-webkit2-greeter\n' | sudo tee /etc/lightdm/lightdm.conf.d/50-niri-noctalia.conf >/dev/null
+sudo install -m 644 /dev/null /etc/lightdm/lightdm-webkit2-greeter.conf
+sudo tee /etc/lightdm/lightdm-webkit2-greeter.conf >/dev/null <<'EOF'
+[greeter]
+webkit_theme = glorious
+EOF
+
+# Replace the selected display manager for the next boot; do not stop the
+# current graphical session while this installer is running.
+display_manager_unit="$(basename "$(readlink -f /etc/systemd/system/display-manager.service 2>/dev/null || true)")"
+if [[ -n "$display_manager_unit" && "$display_manager_unit" != lightdm.service ]]; then
+  sudo systemctl disable "$display_manager_unit"
+fi
+sudo systemctl enable lightdm.service
+
 systemctl --user restart xdg-desktop-portal.service
 if ((!KEEP_EXISTING_WALLPAPER)); then
   cp -a "$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png" "$WALLPAPER/"
@@ -97,8 +143,8 @@ niri validate --config "$CONFIG/niri/config.kdl"
 noctalia config validate
 touch "$STATE/installed"
 if ((UPDATING)); then
-  echo "Actualización completada. Cierra sesión y vuelve a entrar en Niri para aplicar todos los cambios."
+  echo "Actualización completada. Reinicia el equipo para aplicar LightDM y cierra sesión y vuelve a entrar en Niri para aplicar la configuración."
 else
-  echo "Instalado. Cierra sesión y elige Niri en el selector de sesiones. GNOME seguirá disponible."
+  echo "Instalado. Reinicia el equipo para iniciar con LightDM y elige Niri en el selector de sesiones. GNOME seguirá disponible."
 fi
 echo "Los respaldos originales se conservan en: $STATE/backup"

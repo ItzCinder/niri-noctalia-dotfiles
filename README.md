@@ -10,11 +10,11 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - **Enfoque del puntero:** no usa `focus-follows-mouse`; mover el puntero entre ventanas no cambia el foco automáticamente.
 - **Noctalia v5:** barra, paneles, tema oscuro personalizado, paleta actual, transparencias y wallpaper.
 - **Selector de archivos:** configura `xdg-desktop-portal` para preferir el backend KDE de Dolphin y usar GTK como alternativa. Instala el portal base y ambos backends.
-- **Dolphin y KDE:** instala la preferencia Breeze para las aplicaciones Qt, una paleta oscura sin el marco violeta saturado y una vista compacta del selector.
+- **Dolphin y KDE:** aplica la paleta oscura `noctalia`, iconos Breeze oscuros y el estilo Breeze. Dolphin conserva visible su barra de menú; el selector KDE usa vista de detalles, panel de lugares más ancho, ruta completa y previsualización.
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
-- **Tema de inicio de sesión:** instala el tema Glorious para LightDM. No cambia el gestor de inicio de sesión que ya usa el sistema.
+- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y el tema Glorious. Guarda la selección del gestor anterior y la configuración del greeter, desactiva el gestor anterior y habilita LightDM para el próximo arranque sin cerrar la sesión gráfica actual. Los paquetes del gestor anterior se conservan.
 - **Dependencias de sesión:** instala Niri, Noctalia, Dolphin, el portal de escritorio y sus backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard.
 - **Instalador actualizable:** al volver a ejecutar `install.sh`, actualiza las configuraciones, conserva los respaldos de la primera instalación y registra los paquetes agregados en cada ejecución.
 - **Desinstalador:** guarda una copia de las configuraciones instaladas, restaura las configuraciones anteriores y propone quitar los paquetes que incorporó el instalador.
@@ -36,7 +36,7 @@ Desde la carpeta del proyecto, ejecuta:
 
 En la primera instalación, el script respalda las configuraciones que ya existan en `~/.config`, instala las dependencias y copia los archivos del proyecto. Si ya existe el marcador `~/.local/state/niri-noctalia-dotfiles/installed`, el mismo comando funciona como actualizador: reemplaza los archivos administrados por el proyecto y conserva los respaldos originales.
 
-Si el wallpaper del proyecto ya existe en `~/Pictures/Noctalia` y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, cierra sesión y entra en **Niri** para aplicar toda la configuración y reiniciar los portales con la nueva preferencia. GNOME permanece disponible como sesión alternativa.
+Si el wallpaper del proyecto ya existe en `~/Pictures/Noctalia` y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión. GNOME permanece disponible como sesión alternativa.
 
 ## Demostración
 
@@ -50,7 +50,7 @@ Desde la carpeta del proyecto, ejecuta:
 ./uninstall.sh
 ```
 
-El desinstalador restaura las configuraciones anteriores. La configuración que estaba activa justo antes de desinstalar se conserva en `~/.local/state/niri-noctalia-dotfiles/uninstall-saved`; los respaldos de la primera instalación permanecen en `~/.local/state/niri-noctalia-dotfiles/backup`. El script solicita confirmación de `pacman` antes de quitar paquetes agregados por el instalador.
+El desinstalador restaura las configuraciones anteriores y la selección del gestor de inicio guardada antes de instalar LightDM. Reinicia para aplicar esa selección. La configuración que estaba activa justo antes de desinstalar se conserva en `~/.local/state/niri-noctalia-dotfiles/uninstall-saved`; los respaldos de la primera instalación permanecen en `~/.local/state/niri-noctalia-dotfiles/backup`. El script solicita confirmación de `pacman` antes de quitar paquetes agregados por el instalador.
 
 ## Estructura
 
