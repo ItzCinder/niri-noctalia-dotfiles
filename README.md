@@ -54,7 +54,7 @@ El desinstalador restaura las configuraciones anteriores y la selección del ges
 
 ## Recuperar una pantalla de inicio fallida
 
-Si LightDM queda en un ciclo de reinicios o muestra una pantalla negra, cambia a una TTY con **Ctrl+Alt+F3**, inicia sesión y ejecuta `recover-login.sh` desde la carpeta del proyecto. El script restaura la configuración previa del greeter, vuelve a seleccionar el gestor guardado y detiene el ciclo hasta reiniciar. Después ejecuta `sudo reboot`.
+Si LightDM queda en un ciclo de reinicios o muestra una pantalla negra, cambia a una TTY con **Ctrl+Alt+F3** e inicia sesión. Ejecuta `./recover-login.sh` desde la carpeta del proyecto para restaurar la configuración previa del greeter, o `./recover-login.sh --gdm` para instalar y volver al gestor de inicio de GNOME. Luego ejecuta `sudo reboot`.
 
 ## Estructura
 

@@ -6,6 +6,20 @@ BACKUP="$STATE/system-backup/lightdm-webkit2-greeter.conf"
 TARGET_FILE="$STATE/system-backup/display-manager-target"
 ENABLED_FILE="$STATE/system-backup/display-manager-enabled"
 
+if [[ "${1:-}" == --gdm ]]; then
+  sudo systemctl stop lightdm.service >/dev/null 2>&1 || true
+  sudo pacman -S --needed gdm
+  sudo systemctl disable lightdm.service >/dev/null 2>&1 || true
+  sudo systemctl enable gdm.service
+  sudo systemctl reset-failed lightdm.service
+  echo "GDM quedó seleccionado. Reinicia con: sudo reboot"
+  exit 0
+fi
+if (($# > 0)); then
+  echo "Uso: $0 [--gdm]" >&2
+  exit 2
+fi
+
 if [[ ! -s "$BACKUP" ]]; then
   echo "No encuentro el respaldo anterior del greeter: $BACKUP" >&2
   echo "Inicia una TTY con Ctrl+Alt+F3 y revisa el gestor previo con systemctl." >&2
