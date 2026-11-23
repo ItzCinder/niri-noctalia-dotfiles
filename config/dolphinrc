@@ -6,9 +6,11 @@ ViewPropsTimestamp=2026,11,16,5,28,21.845
 Places Icons Auto-resize=false
 Places Icons Static Size=22
 Show hidden files=false
-Show Preview=false
+Show Preview=true
 Show Speedbar=true
+Speedbar Width=180
+Show Full Path=true
 View Style=DetailTree
 
 [MainWindow]
-MenuBar=Disabled
+MenuBar=Enabled
