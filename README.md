@@ -14,7 +14,7 @@ Dotfiles personales para una sesión Wayland con Niri y Noctalia en CachyOS. El 
 - **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
-- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y una variante de Glorious con los colores de la paleta Noctalia actual. Conserva el resto de la configuración del greeter, activa depuración y detección de errores, y configura el tema para el próximo arranque. Los paquetes del gestor anterior se conservan.
+- **Inicio de sesión:** instala LightDM, el greeter WebKit2 y una variante de Glorious con los colores de la paleta Noctalia y el mismo wallpaper que usa Niri. Conserva el resto de la configuración del greeter, activa depuración y detección de errores, y configura el tema para el próximo arranque. Los paquetes del gestor anterior se conservan.
 - **Dependencias de sesión:** instala Niri, Noctalia, Dolphin, el portal de escritorio y sus backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard.
 - **Instalador actualizable:** al volver a ejecutar `install.sh`, actualiza las configuraciones, conserva los respaldos de la primera instalación y registra los paquetes agregados en cada ejecución.
 - **Desinstalador:** guarda una copia de las configuraciones instaladas, restaura las configuraciones anteriores y propone quitar los paquetes que incorporó el instalador.

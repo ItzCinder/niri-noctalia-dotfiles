@@ -5,6 +5,7 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 STATE="$HOME/.local/state/niri-noctalia-dotfiles"
 CONFIG="$HOME/.config"
 WALLPAPER="$HOME/Pictures/Noctalia"
+NIRI_WALLPAPER="$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png"
 PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter jq xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland qt6ct qt5ct breeze playerctl brightnessctl wl-clipboard)
 LIGHTDM_THEME_NAME=niri-noctalia
 LIGHTDM_THEME_DIR="/usr/share/lightdm-webkit/themes/$LIGHTDM_THEME_NAME"
@@ -203,6 +204,13 @@ sudo install -d -m 755 "$LIGHTDM_THEME_DIR"
 touch "$STATE/created/lightdm-theme-installed"
 sudo cp -a "$glorious_theme_source/." "$LIGHTDM_THEME_DIR/"
 sudo sed -i -E 's/^name=.*/name=niri-noctalia/' "$LIGHTDM_THEME_DIR/index.theme"
+sudo install -m 644 "$NIRI_WALLPAPER" "$LIGHTDM_THEME_DIR/assets/bg.png"
+sudo sed -i "s|this._defaultBackgroundPath = 'assets/bg.jpg';|this._defaultBackgroundPath = 'assets/bg.png';|" "$LIGHTDM_THEME_DIR/js/backgrounds.js"
+if ! cmp -s "$NIRI_WALLPAPER" "$LIGHTDM_THEME_DIR/assets/bg.png" ||
+   ! sudo grep -Fq "this._defaultBackgroundPath = 'assets/bg.png';" "$LIGHTDM_THEME_DIR/js/backgrounds.js"; then
+  echo "No pude aplicar el wallpaper de Niri al tema de LightDM." >&2
+  exit 1
+fi
 theme_css="$LIGHTDM_THEME_DIR/css/global.css"
 set_theme_color() {
   local variable="$1" value="$2"
