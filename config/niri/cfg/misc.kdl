@@ -1,0 +1,33 @@
+    prefer-no-csd
+    screenshot-path null
+
+    environment {
+        ELECTRON_OZONE_PLATFORM_HINT "auto"
+        QT_QPA_PLATFORM "wayland"
+        QT_QPA_PLATFORMTHEME "kde"
+        QT_STYLE_OVERRIDE "Breeze"
+        QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+        XDG_CURRENT_DESKTOP "niri"
+        XDG_SESSION_TYPE "wayland"
+    }
+
+    cursor {
+        xcursor-theme "Windows-10"
+        xcursor-size 24
+    }
+
+    blur {
+        passes 1        // Single pass to reduce GPU load
+        offset 2.0      // Moderate blur with one pass
+        noise 0.0       // Disable grain for lower rendering overhead
+        saturation 1.0  // color saturation boost (default: 1.5)
+    }
+
+    debug {
+        // Allows notification actions and window activation from Noctalia.
+        honor-xdg-activation-with-invalid-serial
+    }
+
+    hotkey-overlay {
+       skip-at-startup
+    }

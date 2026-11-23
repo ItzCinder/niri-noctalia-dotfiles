@@ -1,0 +1,20 @@
+    layout {
+        gaps 28 // More breathing room between windows and screen edges
+        center-focused-column "never" // Don’t auto-center focused column
+        default-column-width { proportion 1.0; } // New windows fill the workspace width
+
+        background-color "transparent" // Lets Noctalia v5 wallpaper show through.
+
+        focus-ring {
+            active-gradient from="#6F23F3" to="#D0BCFF" angle=45 in="oklch shorter hue" // Violet-to-lavender current palette
+            inactive-color "#4A4456"
+        }
+
+        preset-column-widths {
+            proportion 0.33333
+            proportion 0.5
+            proportion 0.66667
+        }
+
+        struts {}
+    }
