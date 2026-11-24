@@ -2,7 +2,7 @@
 
 **Noria** es una configuración personal de escritorio para CachyOS, basada en Niri y Noctalia. También configura Kitty y Dolphin y aplica una paleta oscura violeta. La sesión que instala es Niri; no instala un escritorio GNOME.
 
-> **Versión:** `0.2-alpha`. Versión alpha: está en pruebas y puede cambiar mientras se sigue ajustando la instalación y la configuración.
+> **Versión:** `0.2.1-alpha`. Versión alpha: está en pruebas y puede cambiar mientras se sigue ajustando la instalación y la configuración.
 
 > **Nota de desarrollo:** la mayor parte de este proyecto fue creada con *vibecoding*: desarrollo iterativo asistido por modelos de inteligencia artificial a partir de instrucciones y revisiones humanas. Las decisiones, pruebas en el equipo y ajustes finales siguen siendo responsabilidad de quien mantiene el proyecto.
 
@@ -15,7 +15,7 @@
 - **Dolphin y KDE:** aplica la paleta oscura `noctalia`, iconos Breeze oscuros y el estilo Breeze. Dolphin conserva visible su barra de menú; el selector KDE usa vista de detalles, panel de lugares más ancho, ruta completa y previsualización.
 - **Kitty:** instala la configuración y el tema Dracula, y se establece como terminal por defecto de la sesión y de Dolphin.
 - **Video:** instala VLC y lo registra como reproductor predeterminado para formatos de video comunes.
-- **Grabación:** habilita el plugin Screen Recorder de Noctalia y su motor `gpu-screen-recorder`; `Alt + Shift + S` inicia o detiene la grabación.
+- **Grabación:** habilita el plugin Screen Recorder de Noctalia y su motor `gpu-screen-recorder`; `Alt + Shift + S` inicia o detiene la grabación. Usa codificación por CPU por defecto para evitar fallos en GPUs/drivers sin codificador H.264; mientras grabas utiliza más CPU, y puedes cambiar a GPU desde los ajustes del plugin si tu hardware lo admite.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
 - **Inicio de sesión:** instala LightDM, el greeter WebKit2 y una variante de Glorious con los colores de la paleta Noctalia y el mismo wallpaper que usa Niri. Conserva el resto de la configuración del greeter, activa depuración y detección de errores, y configura el tema para el próximo arranque. Los paquetes del gestor anterior se conservan.
@@ -32,7 +32,7 @@
 
 ## Rendimiento y compatibilidad
 
-La configuración conserva el diseño visual, los efectos, las transparencias y el espaciado originales. Para facilitar su mantenimiento, la selección de paquetes está separada del instalador y no se instala una sesión GNOME completa. La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. La grabación aprovecha `gpu-screen-recorder`; la compatibilidad de codificación depende de las capacidades del controlador y de la GPU.
+La configuración conserva el diseño visual, los efectos, las transparencias y el espaciado originales. Para facilitar su mantenimiento, la selección de paquetes está separada del instalador y no se instala una sesión GNOME completa. La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. La grabación usa codificación por CPU por defecto para ser compatible con sistemas sin codificador H.264 por hardware; al grabar, el consumo de CPU será mayor. En equipos con codificación H.264 acelerada, se puede seleccionar GPU en Noctalia → Settings → Plugins → Screen Recorder.
 
 No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Niri Displays abre un panel independiente para cambiar resolución y frecuencia por monitor durante la sesión; Niri no conserva esos cambios temporales al reiniciar. El Monitor integrado de Noctalia 5.6 solo expone controles de brillo, así que el acceso al panel se hace con `Mod+Shift+M`. Para establecer valores permanentes, configura la salida correspondiente en `config/niri/cfg/display.kdl`. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
 
