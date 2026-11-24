@@ -10,7 +10,7 @@ if [[ -z "$PICTURES_DIR" || "$PICTURES_DIR" == "$HOME" ]]; then
 fi
 WALLPAPER="$PICTURES_DIR/Noctalia"
 NIRI_WALLPAPER="$ROOT/config/wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png"
-PKGS=(niri noctalia kitty dolphin fastfetch lightdm lightdm-webkit2-greeter jq xdg-desktop-portal xdg-desktop-portal-kde xdg-desktop-portal-gtk xdg-desktop-portal-gnome xwayland-satellite qt6-wayland breeze playerctl brightnessctl wl-clipboard)
+source "$ROOT/scripts/packages.sh"
 LIGHTDM_THEME_NAME=niri-noctalia
 LIGHTDM_THEME_DIR="/usr/share/lightdm-webkit/themes/$LIGHTDM_THEME_NAME"
 UPDATING=0
@@ -26,14 +26,14 @@ if [[ "${ID:-}" != cachyos ]]; then
   echo "Este instalador está preparado para CachyOS; detecté ${PRETTY_NAME:-desconocida}." >&2
   exit 1
 fi
-if ! command -v yay >/dev/null 2>&1; then
-  echo "Necesito yay para instalar el cursor Windows-10 desde AUR en CachyOS." >&2
+if ((${#AUR_PKGS[@]})) && ! command -v yay >/dev/null 2>&1; then
+  echo "Necesito yay para instalar los paquetes AUR: ${AUR_PKGS[*]}" >&2
   exit 1
 fi
 if [[ -e "$STATE/installed" ]]; then
   UPDATING=1
 fi
-for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf kitty/current-theme.conf fastfetch/config.jsonc fastfetch/arch.txt dolphinrc kdeglobals xdg-desktop-portal/niri-portals.conf environment.d/90-kde-qt.conf wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
+for f in niri/config.kdl noctalia/config.toml noctalia/bar.toml noctalia/BlueDusk.json kitty/kitty.conf kitty/current-theme.conf fastfetch/config.jsonc fastfetch/arch.txt dolphinrc kdeglobals mimeapps.list xdg-desktop-portal/niri-portals.conf environment.d/90-kde-qt.conf environment.d/90-terminal.conf wallpaper/wallhaven-e7xx6r_1920x1080-dark10.png; do
   [[ -e "$ROOT/config/$f" ]] || { echo "Falta el archivo del paquete: config/$f" >&2; exit 1; }
 done
 if [[ -e "$WALLPAPER/wallhaven-e7xx6r_1920x1080-dark10.png" ]] &&
@@ -55,7 +55,9 @@ fi
 pacman -Qq | sort -u > "$STATE/packages-before-run.txt"
 previously_added="$STATE/packages-added.txt"
 sudo pacman -Syu --needed "${PKGS[@]}"
-yay -S --needed windows-10-cursor lightdm-webkit2-theme-glorious
+if ((${#AUR_PKGS[@]})); then
+  yay -S --needed "${AUR_PKGS[@]}"
+fi
 for binary in niri noctalia jq; do
   if ! command -v "$binary" >/dev/null 2>&1; then
     echo "No encuentro '$binary' en PATH después de instalar los paquetes. No copié la configuración." >&2
@@ -89,7 +91,7 @@ rm -f "$newly_added"
 rm -f "$STATE/packages-before-run.txt"
 
 mkdir -p "$STATE/backup" "$STATE/created" "$STATE/system-backup" "$WALLPAPER"
-for item in niri noctalia kitty fastfetch dolphinrc kdeglobals xdg-desktop-portal environment.d; do
+for item in niri noctalia kitty fastfetch dolphinrc kdeglobals mimeapps.list xdg-desktop-portal environment.d; do
   if [[ -e "$CONFIG/$item" && ! -e "$STATE/created/had-$item" ]]; then
     cp -a "$CONFIG/$item" "$STATE/backup/$item"
     touch "$STATE/created/had-$item"
@@ -132,8 +134,9 @@ cp -a "$ROOT/config/kitty/current-theme.conf" "$CONFIG/kitty/"
 cp -a "$ROOT/config/fastfetch/." "$CONFIG/fastfetch/"
 cp -a "$ROOT/config/dolphinrc" "$CONFIG/dolphinrc"
 cp -a "$ROOT/config/kdeglobals" "$CONFIG/kdeglobals"
+cp -a "$ROOT/config/mimeapps.list" "$CONFIG/mimeapps.list"
 cp -a "$ROOT/config/xdg-desktop-portal/niri-portals.conf" "$CONFIG/xdg-desktop-portal/"
-cp -a "$ROOT/config/environment.d/90-kde-qt.conf" "$CONFIG/environment.d/"
+cp -a "$ROOT/config/environment.d/90-kde-qt.conf" "$ROOT/config/environment.d/90-terminal.conf" "$CONFIG/environment.d/"
 legacy_qt_env="$CONFIG/environment.d/90-gnome-qt.conf"
 if [[ -f "$legacy_qt_env" ]] && grep -qx '# Qt6ct palette and Breeze widget style for Qt apps in the Niri session\.' "$legacy_qt_env" &&
    grep -qx 'QT_QPA_PLATFORMTHEME=qt6ct' "$legacy_qt_env" &&
@@ -282,6 +285,6 @@ touch "$STATE/installed"
 if ((UPDATING)); then
   echo "Actualización completada. Reinicia el equipo para aplicar LightDM y cierra sesión y vuelve a entrar en Niri para aplicar la configuración."
 else
-  echo "Instalado. Reinicia el equipo para iniciar con LightDM y elige Niri en el selector de sesiones. GNOME seguirá disponible."
+  echo "Instalado. Reinicia el equipo para iniciar con LightDM y elige Niri en el selector de sesiones."
 fi
 echo "Los respaldos originales se conservan en: $STATE/backup"

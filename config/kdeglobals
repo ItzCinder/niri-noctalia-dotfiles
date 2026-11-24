@@ -133,6 +133,8 @@ ForegroundVisited=195,171,255
 [General]
 ColorScheme=noctalia
 Name=noctalia
+TerminalApplication=kitty
+TerminalService=kitty.desktop
 
 [Icons]
 Theme=breeze-dark
