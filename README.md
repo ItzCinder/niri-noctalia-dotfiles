@@ -1,23 +1,25 @@
 # Noria
 
-**Noria** es una configuración personal de escritorio para CachyOS, basada en Niri y Noctalia. También configura Kitty y Dolphin, aplica una paleta oscura violeta y conserva GNOME como sesión alternativa.
+**Noria** es una configuración personal de escritorio para CachyOS, basada en Niri y Noctalia. También configura Kitty y Dolphin y aplica una paleta oscura violeta. La sesión que instala es Niri; no instala un escritorio GNOME.
 
-> **Versión:** `0.1-alpha`. Primera versión alpha: está en pruebas y puede cambiar mientras se sigue ajustando la instalación y la configuración.
+> **Versión:** `0.2-alpha`. Versión alpha: está en pruebas y puede cambiar mientras se sigue ajustando la instalación y la configuración.
 
 > **Nota de desarrollo:** la mayor parte de este proyecto fue creada con *vibecoding*: desarrollo iterativo asistido por modelos de inteligencia artificial a partir de instrucciones y revisiones humanas. Las decisiones, pruebas en el equipo y ajustes finales siguen siendo responsabilidad de quien mantiene el proyecto.
 
 ## Características
 
-- **Niri:** configuración modular para animaciones, pantalla, input, layout, reglas de ventanas, atajos y aplicaciones de inicio.
+- **Niri:** configuración modular para animaciones, pantalla, input, layout, reglas de ventanas, atajos y aplicaciones de inicio. Usa el paquete `niri-git` de CachyOS para habilitar el atajo de soltar Super y abrir Overview con ventanas y espacios de trabajo.
 - **Enfoque del puntero:** no usa `focus-follows-mouse`; mover el puntero entre ventanas no cambia el foco automáticamente.
 - **Noctalia v5:** barra, paneles, tema oscuro personalizado, paleta actual, transparencias y wallpaper. El plugin Niri Displays permite cambiar resolución y frecuencia por monitor; se abre con `Mod+Shift+M`.
 - **Selector de archivos:** configura `xdg-desktop-portal` para preferir el backend KDE de Dolphin y usar GTK como alternativa. Mantiene el tema Breeze y la paleta Noctalia en las aplicaciones Qt y en el portal KDE.
 - **Dolphin y KDE:** aplica la paleta oscura `noctalia`, iconos Breeze oscuros y el estilo Breeze. Dolphin conserva visible su barra de menú; el selector KDE usa vista de detalles, panel de lugares más ancho, ruta completa y previsualización.
-- **Kitty:** instala la configuración y el tema Dracula que se usan actualmente, con fondo translúcido y padding.
+- **Kitty:** instala la configuración y el tema Dracula, y se establece como terminal por defecto de la sesión y de Dolphin.
+- **Video:** instala VLC y lo registra como reproductor predeterminado para formatos de video comunes.
+- **Grabación:** habilita el plugin Screen Recorder de Noctalia y su motor `gpu-screen-recorder`; `Alt + Shift + S` inicia o detiene la grabación.
 - **Fastfetch:** instala Fastfetch con el logo ASCII de Arch y el resumen de sistema personalizado.
 - **Cursor:** configura el cursor Windows 10 que usa Niri. El instalador lo obtiene desde AUR mediante `yay`.
 - **Inicio de sesión:** instala LightDM, el greeter WebKit2 y una variante de Glorious con los colores de la paleta Noctalia y el mismo wallpaper que usa Niri. Conserva el resto de la configuración del greeter, activa depuración y detección de errores, y configura el tema para el próximo arranque. Los paquetes del gestor anterior se conservan.
-- **Dependencias de sesión:** instala Niri, Noctalia, Dolphin, el portal de escritorio y sus backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard.
+- **Dependencias de sesión:** instala `niri-git`, Noctalia, Dolphin, VLC, el portal de escritorio y los backends KDE/GTK, soporte Wayland para Qt y utilidades de multimedia, brillo y clipboard. El backend GNOME se usa solo para ScreenCast; no instala ni habilita la sesión GNOME.
 - **Instalador actualizable:** al volver a ejecutar `install.sh`, actualiza las configuraciones, conserva los respaldos de la primera instalación y registra los paquetes agregados en cada ejecución.
 - **Desinstalador:** guarda una copia de las configuraciones instaladas, restaura las configuraciones anteriores y propone quitar los paquetes que incorporó el instalador.
 
@@ -30,7 +32,7 @@
 
 ## Rendimiento y compatibilidad
 
-La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. Niri conserva el desenfoque con un solo pase y las animaciones usan una tolerancia de asentamiento menos estricta. Kitty mantiene sus opciones actuales de transparencia y padding; su frecuencia de redibujado conserva el valor equilibrado del programa. Se mantienen la transparencia, el desenfoque, las animaciones y la composición visual.
+La configuración conserva el diseño visual, los efectos, las transparencias y el espaciado originales. Para facilitar su mantenimiento, la selección de paquetes está separada del instalador y no se instala una sesión GNOME completa. La referencia de rendimiento es un Intel Core i3-6100, Intel HD Graphics 530, Radeon HD 6670 y 16 GiB de RAM. La grabación aprovecha `gpu-screen-recorder`; la compatibilidad de codificación depende de las capacidades del controlador y de la GPU.
 
 No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ruta de inicio de usuario. Niri deja la salida de ejemplo comentada; el instalador guarda el wallpaper en la carpeta Imágenes que informa XDG y actualiza la ruta de Noctalia. Niri Displays abre un panel independiente para cambiar resolución y frecuencia por monitor durante la sesión; Niri no conserva esos cambios temporales al reiniciar. El Monitor integrado de Noctalia 5.6 solo expone controles de brillo, así que el acceso al panel se hace con `Mod+Shift+M`. Para establecer valores permanentes, configura la salida correspondiente en `config/niri/cfg/display.kdl`. El instalador sigue dirigido a CachyOS y requiere una GPU con aceleración gráfica compatible con Niri/Wayland.
 
@@ -48,11 +50,14 @@ No se fija una resolución, frecuencia de refresco, nombre de monitor, GPU ni ru
 | `Mod + Shift + Enter` | Abrir el selector de wallpaper |
 | `Mod + Shift + M` | Abrir Niri Displays para cambiar resolución y frecuencia por monitor |
 | `Mod + Q` | Cerrar la ventana enfocada |
+| `Alt + Tab` | Cambiar a la ventana enfocada anteriormente |
 | `Mod + H/J/K/L` | Mover el foco entre ventanas y columnas |
 | `Mod + 1` … `Mod + 9` | Cambiar al espacio de trabajo indicado |
 | `Mod + F` | Maximizar la columna enfocada |
 | `Mod + Shift + F` | Alternar pantalla completa |
 | `Mod + Tab` | Volver al espacio de trabajo anterior |
+| `Super` (soltar) | Abrir Overview de ventanas y espacios de trabajo |
+| `Alt + Shift + S` | Iniciar/detener la grabación de pantalla de Noctalia |
 | `Print` | Captura de región con anotación |
 | `Shift + Print` | Captura de pantalla completa con anotación |
 | Teclas multimedia | Controlar volumen, brillo y reproducción/pausa |
@@ -69,7 +74,7 @@ Desde la carpeta del proyecto, ejecuta:
 
 En la primera instalación, el script respalda las configuraciones que ya existan en `~/.config`, instala las dependencias y copia los archivos del proyecto. Si ya existe el marcador `~/.local/state/niri-noctalia-dotfiles/installed`, el mismo comando funciona como actualizador: reemplaza los archivos administrados por el proyecto y conserva los respaldos originales.
 
-Si el wallpaper del proyecto ya existe en la carpeta `Noctalia` dentro de Imágenes y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión. GNOME permanece disponible como sesión alternativa.
+Si el wallpaper del proyecto ya existe en la carpeta `Noctalia` dentro de Imágenes y fue modificado, el instalador lo conserva durante una actualización. Después de instalar o actualizar, reinicia el equipo para que LightDM tome el lugar del gestor anterior. En la pantalla de inicio, elige **Niri** como sesión.
 
 ## Desinstalar
 
@@ -93,11 +98,14 @@ Próximamente.
 .
 └── config/
     ├── dolphinrc
-    ├── environment.d/90-kde-qt.conf
+    ├── environment.d/
+    │   ├── 90-kde-qt.conf
+    │   └── 90-terminal.conf
     ├── fastfetch/
     │   ├── arch.txt
     │   └── config.jsonc
     ├── kdeglobals
+    ├── mimeapps.list
     ├── kitty/
     │   ├── current-theme.conf
     │   └── kitty.conf
@@ -112,7 +120,7 @@ Próximamente.
     └── xdg-desktop-portal/niri-portals.conf
 ```
 
-`install.sh` instala y actualiza la configuración. `uninstall.sh` restaura los respaldos y retira los archivos instalados.
+`install.sh` instala y actualiza la configuración; `scripts/packages.sh` mantiene separadas las listas de paquetes de repositorio y AUR. `uninstall.sh` restaura los respaldos y retira los archivos instalados.
 
 ## Notas
 
