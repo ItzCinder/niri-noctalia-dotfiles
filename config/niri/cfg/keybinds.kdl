@@ -6,6 +6,9 @@ binds {
     // ─── Noctalia v5 keybinds ───
     // https://docs.noctalia.dev/getting-started/keybinds/
 
+    Mod {
+        release { toggle-overview; }
+    }
     Mod+Shift+ESCAPE                     { show-hotkey-overlay; }
 
     // ─── Applications ───
@@ -17,7 +20,7 @@ binds {
     Mod+S                               hotkey-overlay-title="Open Control Center: noctalia controlCenter" { spawn-sh "noctalia msg panel-toggle control-center"; }
     Mod+Shift+S                         hotkey-overlay-title="Open Settings: noctalia settings" { spawn-sh "noctalia msg settings-toggle"; }
     Mod+Shift+M                         hotkey-overlay-title="Open Monitor Controls: Niri Displays" { spawn-sh "noctalia msg panel-toggle raycursive/niri-displays:panel"; }
-    CTRL+Shift+S                        hotkey-overlay-title="Toggle screen recording (Noctalia)" { spawn-sh "noctalia msg plugin noctalia/screen_recorder:service all toggle"; }
+    Alt+Shift+S                         hotkey-overlay-title="Toggle screen recording (Noctalia)" { spawn-sh "noctalia msg plugin noctalia/screen_recorder:service all toggle"; }
     Mod+CTRL+Return                     hotkey-overlay-title="Open App Launcher: noctalia launcher" { spawn-sh "noctalia msg panel-toggle launcher"; }
     Mod+ALT+L                           hotkey-overlay-title="Lock Screen: noctalia lock" { spawn-sh "noctalia msg session lock"; }
     Mod+Shift+Q                         hotkey-overlay-title="Session Menu: noctalia sessionMenu" { spawn-sh "noctalia msg panel-toggle session"; }
@@ -47,6 +50,7 @@ binds {
 
     Mod+H                               { focus-column-left; }
     Mod+L                               { focus-column-right; }
+    Alt+Tab                             repeat=false hotkey-overlay-title="Switch to previous window" { focus-window-previous; }
     Mod+Up                              { focus-window-up; }
     Mod+K                               { focus-window-up; }
     Mod+Down                            { focus-window-down; }
